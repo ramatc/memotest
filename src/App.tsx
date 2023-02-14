@@ -15,6 +15,8 @@ const IMAGES = [
 .flatMap(image => [`a|${image}`, `b|${image}`])
 .sort(() => Math.random() - 0.5);
 
+import question from './assets/question-circle.svg';
+
 const App = () => {
 
     const [guessed, setGuessed] = useState<string[]>([]);
@@ -32,40 +34,41 @@ const App = () => {
 
     useEffect(() => {
         if(guessed.length === IMAGES.length){
-            alert("You win");
+            alert('You win');
             location.reload();
         }
     }, [guessed]);
-    
+
+    const handleSelected = (image: string) => {
+        if(!selected.includes(image) && !guessed.includes(image) && selected.length < 2 ){
+            setSelected((selected) => selected.concat(image))
+        }
+    }
+
     return (
         <main>
             <h1>Memotest</h1>
-                <ul className='memo-container'>
-                    {IMAGES.map((image) => {
-                        const [, url] = image.split('|');
+            <ul className='memo-container'>
+                {IMAGES.map((image) => {
+                    const [, url] = image.split('|');
 
-                        return(
-                            (
-                                <li 
-                                    key={image}
-                                    onClick={() => selected.length < 2 && setSelected((selected) => selected.concat(image))}
-                                >
-                                    {selected.includes(image) || guessed.includes(image) ? (
-                                        <img 
-                                            src={url} 
-                                            alt='Icon'
-                                        />    
-                                    ) : (
-                                        <img 
-                                            src='https://icongr.am/fontawesome/question-circle.svg?size=128&color=currentColor' 
-                                            alt='Question circle'
-                                        />
-                                    )}
-                                </li>
-                            )
+                    return(
+                        (
+                            <li 
+                                key={image}
+                                onClick={() => handleSelected(image)}
+                                className={selected.includes(image) || guessed.includes(image) ? 'memo-flipped clicked' : ''}
+                            >
+                                {selected.includes(image) || guessed.includes(image) ? (
+                                    <img src={url} alt='Icon' />    
+                                ) : (
+                                    <img src={question} alt='Question circle' />
+                                )}
+                            </li>
                         )
-                    })}
-                </ul>
+                    )
+                })}
+            </ul>
         </main>
     )
 };
