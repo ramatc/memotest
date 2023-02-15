@@ -1,26 +1,27 @@
 import { useState, useEffect } from 'react';
+import JSConfetti from 'js-confetti';
+import question from './assets/question-circle.svg';
 
 const IMAGES = [
-    'https://icongr.am/devicon/go-original.svg?size=128&color=currentColor',
-    'https://icongr.am/devicon/linux-original.svg?size=128&color=currentColor',
+    'https://icongr.am/devicon/html5-original.svg?size=128&color=currentColor',
+    'https://icongr.am/devicon/css3-original.svg?size=128&color=currentColor',
+    'https://icongr.am/devicon/javascript-original.svg?size=128&color=currentColor',
+    'https://icongr.am/devicon/react-original.svg?size=128&color=currentColor',
+    'https://icongr.am/devicon/nodejs-original.svg?size=128&color=currentColor',
     'https://icongr.am/devicon/mysql-original.svg?size=128&color=currentColor',
-    'https://icongr.am/devicon/postgresql-original.svg?size=128&color=currentColor',
-    'https://icongr.am/devicon/gitlab-original.svg?size=128&color=currentColor',
-    'https://icongr.am/devicon/bower-original.svg?size=128&color=currentColor',
-    'https://icongr.am/devicon/krakenjs-original.svg?size=128&color=currentColor',
-    'https://icongr.am/devicon/docker-original.svg?size=128&color=currentColor',
-    'https://icongr.am/devicon/foundation-original.svg?size=128&color=currentColor',
-    'https://icongr.am/devicon/gimp-original.svg?size=128&color=currentColor',
+    'https://icongr.am/devicon/typescript-original.svg?size=128&color=currentColor',
+    'https://icongr.am/devicon/github-original.svg?size=128&color=currentColor',
+    'https://icongr.am/devicon/sequelize-original.svg?size=128&color=currentColor',
+    'https://icongr.am/devicon/linkedin-original.svg?size=128&color=currentColor',
 ]
 .flatMap(image => [`a|${image}`, `b|${image}`])
 .sort(() => Math.random() - 0.5);
-
-import question from './assets/question-circle.svg';
 
 const App = () => {
 
     const [guessed, setGuessed] = useState<string[]>([]);
     const [selected, setSelected] = useState<string[]>([]);
+    const jsConfetti = new JSConfetti();
 
     useEffect(() => {
         if (selected.length === 2) {
@@ -28,14 +29,13 @@ const App = () => {
                 setGuessed((guessed) => guessed.concat(selected));
             }
 
-            setTimeout(() => setSelected([]), 750);
+            setTimeout(() => setSelected([]), 1000);
         }
     }, [selected]);
 
     useEffect(() => {
         if(guessed.length === IMAGES.length){
-            alert('You win');
-            location.reload();
+            jsConfetti.addConfetti();
         }
     }, [guessed]);
 
@@ -48,6 +48,7 @@ const App = () => {
     return (
         <main>
             <h1>Memotest</h1>
+
             <ul className='memo-container'>
                 {IMAGES.map((image) => {
                     const [, url] = image.split('|');
@@ -60,7 +61,7 @@ const App = () => {
                                 className={selected.includes(image) || guessed.includes(image) ? 'memo-flipped clicked' : ''}
                             >
                                 {selected.includes(image) || guessed.includes(image) ? (
-                                    <img src={url} alt='Icon' />    
+                                    <img src={url} alt='Icon' className='memo-flipped'/>    
                                 ) : (
                                     <img src={question} alt='Question circle' />
                                 )}
@@ -69,6 +70,13 @@ const App = () => {
                     )
                 })}
             </ul>
+
+            <button 
+                className={`btn-again ${guessed.length === IMAGES.length ? '' : 'hidden'}`}
+                onClick={() => location.reload()}
+            >
+                PLAY AGAIN
+            </button>
         </main>
     )
 };
