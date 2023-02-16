@@ -36,13 +36,9 @@ li {
   border: 1px solid #666;
   border-radius: 12px;
   cursor: pointer;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
   box-shadow: 5px 5px 10px 0px rgb(0 0 0 / 10%);
   background-color: #202b38;
 }
-
-
 
 h1 {
   margin: 0;
@@ -111,9 +107,6 @@ button.hidden {
   visibility: hidden;
 }
 
-.memo-flipped {
-  transform: rotateY(180deg);
-}
 
 .clicked {
   cursor: default;
@@ -143,6 +136,11 @@ button.hidden {
 }
 
 @media(min-width: 992px) {
+  li {
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+
   li:hover {
     background-color: #252525d3;
   }
@@ -156,5 +154,9 @@ button.hidden {
   button.btn-again:hover::before {
     -webkit-transform: translate3d(0, 0.5em, -1em);
     transform: translate3d(0, 0.5em, -1em);
+  }
+
+  .memo-flipped {
+    transform: rotateY(180deg);
   }
 }
