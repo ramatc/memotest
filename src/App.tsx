@@ -21,6 +21,10 @@ const App = () => {
 
     const [guessed, setGuessed] = useState<string[]>([]);
     const [selected, setSelected] = useState<string[]>([]);
+    const [clicks, setClicks] = useState<number>(0);
+    const [seconds, setSeconds] = useState<number>(0);
+    const [minutes, setMinutes] = useState<number>(0);
+
     const jsConfetti = new JSConfetti();
 
     useEffect(() => {
@@ -39,16 +43,32 @@ const App = () => {
         }
     }, [guessed]);
 
+    useEffect(() => {
+        const timer = setInterval(() => {
+            if(guessed.length !== IMAGES.length) {
+                setSeconds(prev => prev + 1);
+            }
+    
+            if(seconds === 59) {
+                setMinutes(prev => prev + 1);
+                setSeconds(0);
+            }
+        }, 1000)
+
+        return () => clearInterval(timer);
+    });
+
     const handleSelected = (image: string) => {
         if(!selected.includes(image) && !guessed.includes(image) && selected.length < 2 ){
-            setSelected((selected) => selected.concat(image))
+            setSelected((selected) => selected.concat(image));
+            setClicks(prev => prev + 1);
         }
     }
 
     return (
         <main>
             <h1>Memotest</h1>
-
+            <p className='info'>clicks: {clicks < 10 ? '0' + clicks : clicks} <span>|</span> time: {minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}</p>
             <ul className='memo-container'>
                 {IMAGES.map((image) => {
                     const [, url] = image.split('|');
@@ -70,7 +90,6 @@ const App = () => {
                     )
                 })}
             </ul>
-
             <button 
                 className={`btn-again ${guessed.length === IMAGES.length ? '' : 'hidden'}`}
                 onClick={() => location.reload()}
